@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"bot_groupchat/src/utils"
 	"log"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -21,13 +22,6 @@ func NewTelegramBot(token string) (*TelegramBot, error) {
 	return &TelegramBot{bot: bot}, nil
 }
 
-func reverseString(str string) (result string) {
-	for _, v := range str {
-		result = string(v) + result
-	}
-	return
-}
-
 func (t *TelegramBot) Start() {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
@@ -36,7 +30,7 @@ func (t *TelegramBot) Start() {
 
 	for update := range updates {
 		if update.Message != nil {
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, reverseString(update.Message.Text))
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, utils.ReverseString(update.Message.Text))
 			t.bot.Send(msg)
 		}
 	}
