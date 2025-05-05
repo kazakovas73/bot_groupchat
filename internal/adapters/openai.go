@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	systemMessage = "Отвечай смешно в стиле пьяного отца, путай буквы, как будто ты не можешь выговорить все слова."
+	systemMessage = "Act like a drunk dad. Tell jokes. Response in Russian."
+	defaultAnswer = "Sorry, I couldn't process your request. Please try again later."
 )
 
 type OpenAIClient struct {
@@ -23,8 +24,8 @@ func NewOpenAIClient(api_key string) (*OpenAIClient, error) {
 	return &OpenAIClient{client: &client}, nil
 }
 
-func (client *OpenAIClient) GetResponse(query string) (string, error) {
-	chatCompletion, err := client.client.Chat.Completions.New(context.TODO(), openai.ChatCompletionNewParams{
+func (client *OpenAIClient) GetResponse(ctx context.Context, query string) (string, error) {
+	chatCompletion, err := client.client.Chat.Completions.New(ctx, openai.ChatCompletionNewParams{
 		Messages: []openai.ChatCompletionMessageParamUnion{
 			openai.SystemMessage(systemMessage),
 			openai.UserMessage(query),
@@ -32,7 +33,7 @@ func (client *OpenAIClient) GetResponse(query string) (string, error) {
 		Model: openai.ChatModelGPT4oMini,
 	})
 	if err != nil {
-		return "Не могу ответить, браток. Чиркани попозже!", err
+		return "", err
 	}
 	return chatCompletion.Choices[0].Message.Content, nil
 }

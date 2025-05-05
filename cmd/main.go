@@ -11,13 +11,13 @@ func main() {
 
 	openaiClient, err := adapters.NewOpenAIClient(cfg.OpenAIToken)
 	if err != nil {
-		log.Fatalf("Не удалось создать OpenAI клиента: %v", err)
+		log.Fatalf("OpenAI init failed: %v", err)
 	}
 
-	bot, err := adapters.NewTelegramBot(cfg.TelegramToken, openaiClient)
+	telegramBot, err := adapters.NewTelegramBot(cfg.TelegramToken, openaiClient)
 	if err != nil {
-		log.Fatalf("Не удалось запустить бота: %v", err)
+		log.Fatalf("Telegram bot init failed: %v", err)
 	}
 
-	bot.Start()
+	telegramBot.Start()
 }
